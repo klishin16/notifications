@@ -19,4 +19,8 @@ export class EmailLogService {
   async updateStatus(id: string, status: EEmailStatus, errorMessage?: string) {
     return this.emailLogRepository.update(id, { status, errorMessage });
   }
+
+  async incrementRetryCount(id: string) {
+    await this.emailLogRepository.increment({ id }, 'retryCount', 1);
+  }
 }

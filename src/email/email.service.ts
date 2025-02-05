@@ -4,6 +4,7 @@ import { SendEmailDto } from './dto/send-email.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { EmailLogService } from './email-log.service';
+import { MAX_RETRIES } from './constants';
 
 @Injectable()
 export class EmailService {
@@ -11,6 +12,7 @@ export class EmailService {
 
   constructor(
     @Inject('NODEMAILER') private readonly transporter: Transporter,
+    @Inject(MAX_RETRIES) private readonly maxRetries: number,
     @InjectQueue('emailQueue')
     private readonly emailQueue: Queue<SendEmailDto & { logId: string }>,
     private readonly emailLogService: EmailLogService,
@@ -22,7 +24,10 @@ export class EmailService {
       sendEmailDto.subject,
       sendEmailDto.text,
     );
-    await this.emailQueue.add({ ...sendEmailDto, logId: log.id });
+    await this.emailQueue.add(
+      { ...sendEmailDto, logId: log.id },
+      { attempts: this.maxRetries + 1, backoff: 5000 },
+    );
 
     this.logger.log('Email добавлен в очередь', { logId: log.id });
 

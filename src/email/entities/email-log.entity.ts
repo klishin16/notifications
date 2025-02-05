@@ -18,4 +18,7 @@ export class EmailLog extends BaseEntity {
 
   @Column({ nullable: true })
   errorMessage?: string;
+
+  @Column({ default: 0 })
+  retryCount: number;
 }

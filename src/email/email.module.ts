@@ -7,6 +7,8 @@ import { nodemailerProvider } from './nodemailer.provider';
 import { EmailLogService } from './email-log.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailLog } from './entities/email-log.entity';
+import { ConfigModule } from '@nestjs/config';
+import { MAX_RETRIES } from './constants';
 
 @Module({
   imports: [
@@ -14,9 +16,14 @@ import { EmailLog } from './entities/email-log.entity';
       name: 'emailQueue',
     }),
     TypeOrmModule.forFeature([EmailLog]),
+    ConfigModule,
   ],
   controllers: [EmailController],
   providers: [
+    {
+      provide: MAX_RETRIES,
+      useValue: 3,
+    },
     EmailService,
     EmailLogService,
     EmailProcessor,
