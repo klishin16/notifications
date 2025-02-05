@@ -21,6 +21,7 @@ import * as Joi from 'joi';
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
         DB_LOGGING: Joi.string().valid('all'),
+        EMAIL_MAX_RETRIES: Joi.number(),
       }),
     }),
     BullModule.forRootAsync({
