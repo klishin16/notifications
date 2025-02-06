@@ -19,16 +19,16 @@ export class EmailProcessor {
 
   @Process()
   async handleEmail(job: Job<IEmailJob>) {
-    const { to, subject, text, logId } = job.data;
+    const { logId, ...email } = job.data;
 
-    this.logger.log(`📧 Отправка email на ${to}`);
+    this.logger.log(`📧 Отправка email на ${email.to}`);
 
     await this.emailLogService.updateStatus(logId, EEmailStatus.PENDING);
 
     try {
-      await this.emailService.sendEmail(to, subject, text);
+      await this.emailService.sendEmail(email);
       await this.emailLogService.updateStatus(logId, EEmailStatus.SENT);
-      this.logger.log(`✅ Email успешно отправлен: ${to}`);
+      this.logger.log(`✅ Email успешно отправлен: ${email.to}`);
     } catch (error) {
       if (job.attemptsMade < this.maxRetries) {
         await this.emailLogService.incrementRetryCount(logId);
@@ -45,7 +45,7 @@ export class EmailProcessor {
           error.message,
         );
         console.error(
-          `❌ Email окончательно не отправлен: ${to}, ошибка: ${error.message}`,
+          `❌ Email окончательно не отправлен: ${email.to}, ошибка: ${error.message}`,
         );
       }
     }

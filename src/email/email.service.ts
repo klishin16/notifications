@@ -8,6 +8,8 @@ import { EmailLogService } from './email-log.service';
 import { MAX_RETRIES } from './constants';
 import * as path from 'node:path';
 import { promises as fs } from 'node:fs';
+import { ConfigService } from '@nestjs/config';
+import { IEmail } from './types/email.interface';
 
 @Injectable()
 export class EmailService {
@@ -19,14 +21,11 @@ export class EmailService {
     @InjectQueue('emailQueue')
     private readonly emailQueue: Queue<SendEmailDto & { logId: string }>,
     private readonly emailLogService: EmailLogService,
+    private readonly configService: ConfigService,
   ) {}
 
   async enqueueEmail(sendEmailDto: SendEmailDto) {
-    const log = await this.emailLogService.createLog(
-      sendEmailDto.to,
-      sendEmailDto.subject,
-      sendEmailDto.text,
-    );
+    const log = await this.emailLogService.createLog(sendEmailDto);
     await this.emailQueue.add(
       { ...sendEmailDto, logId: log.id },
       { attempts: this.maxRetries + 1, backoff: 5000 },
@@ -37,12 +36,19 @@ export class EmailService {
     return log.id;
   }
 
-  async sendEmail(to: string, subject: string, text: string) {
+  async sendEmail(email: IEmail) {
+    let html: string | undefined = undefined;
+
+    if (email.template && email.templateData) {
+      html = await this.compileTemplate(email.template, email.templateData);
+    }
+
     return this.transporter.sendMail({
-      from: process.env.SMTP_FROM || '"No Reply" <noreply@example.com>',
-      to,
-      subject,
-      text,
+      from: this.configService.get<string>('SMTP_FROM') || '"No Reply" <noreply@example.com>',
+      to: email.to,
+      subject: email.subject,
+      text: email.text,
+      html
     });
   }
 

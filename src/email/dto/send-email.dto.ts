@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 import { IEmail } from '../types/email.interface';
 
 export class SendEmailDto implements IEmail {
@@ -10,4 +10,11 @@ export class SendEmailDto implements IEmail {
 
   @IsString()
   public text: string;
+
+  @IsString()
+  @IsOptional()
+  public template?: string;
+
+  @IsObject()
+  public templateData?: Record<string, any>
 }

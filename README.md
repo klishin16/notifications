@@ -46,9 +46,9 @@ yarn install
 PORT=3000
 DB_HOST=localhost
 DB_PORT=5432
-DB_USER=postgres
-DB_PASS=password
-DB_NAME=emails
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=notifications
 REDIS_HOST=localhost
 REDIS_PORT=6379
 EMAIL_MAX_RETRIES=3
@@ -132,5 +132,6 @@ npm stop
 - 🛡 Безопасность (Rate limiting, JWT)
 
 // TODO предпросмотр в браузере
+// TODO пагинация
 
 

@@ -13,6 +13,12 @@ export class EmailLog extends BaseEntity {
   @Column('text')
   text: string;
 
+  @Column({ nullable: true })
+  template?: string;
+
+  @Column('jsonb', { nullable: true })
+  templateData?: Record<string, any>;
+
   @Column({ type: 'enum', enum: EEmailStatus, default: EEmailStatus.CREATED })
   status: string;
 
