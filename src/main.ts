@@ -16,7 +16,7 @@ async function bootstrap() {
     .setTitle('Notifications service')
     .setDescription('The notifications API description')
     .setVersion('1.0')
-    .build()
+    .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 

@@ -5,11 +5,12 @@ export const nodemailerProvider = {
   provide: 'NODEMAILER',
   useFactory: (configService: ConfigService) => {
     return nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.example.com', // TODO
-      port: Number(process.env.SMTP_PORT) || 587,
+      host: configService.get<string>('SMTP_HOST') || 'smtp.example.com',
+      port: Number(configService.get<string>('SMTP_PORT')) || 587,
       auth: {
-        user: process.env.SMTP_USER || 'your-email@example.com',
-        pass: process.env.SMTP_PASS || 'your-password',
+        user:
+          configService.get<string>('SMTP_USER') || 'your-email@example.com',
+        pass: configService.get<string>('SMTP_PASSWORD') || 'your-password',
       },
     });
   },

@@ -44,11 +44,13 @@ export class EmailService {
     }
 
     return this.transporter.sendMail({
-      from: this.configService.get<string>('SMTP_FROM') || '"No Reply" <noreply@example.com>',
+      from:
+        this.configService.get<string>('SMTP_FROM') ||
+        '"No Reply" <noreply@example.com>',
       to: email.to,
       subject: email.subject,
       text: email.text,
-      html
+      html,
     });
   }
 
