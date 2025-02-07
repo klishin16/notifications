@@ -5,6 +5,8 @@ import { EmailModule } from './email/email.module';
 import { CommonModule } from './common/common.module';
 
 import * as Joi from 'joi';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'node:path';
 
 @Module({
   imports: [
@@ -32,6 +34,9 @@ import * as Joi from 'joi';
         port: configService.get<number>('REDIS_PORT') || 6379,
       }),
       inject: [ConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'dashboard', 'dist'),
     }),
     EmailModule,
     CommonModule,

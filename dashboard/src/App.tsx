@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">📊 Email Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-4">📊 Notifications Dashboard</h1>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 border rounded-lg shadow">

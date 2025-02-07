@@ -34,6 +34,7 @@
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/serve-static": "^5.0.2",
     "@nestjs/swagger": "^11.0.3",
     "@nestjs/typeorm": "^11.0.0",
     "bull": "^4.16.5",
@@ -88,7 +89,16 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": ["/node_modules/", "main.ts", "src/common/database", ".module.ts$", "units/mocks"],
-    "coverageReporters": ["text", "lcov"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "main.ts",
+      "src/common/database",
+      ".module.ts$",
+      "units/mocks"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ]
   }
 }

@@ -1,4 +1,4 @@
-# Draft: Email Service (NestJS + Bull + PostgreSQL)
+# Draft: Notifications Service (NestJS + Bull + PostgreSQL)
 
 
 ## 📌 Описание
