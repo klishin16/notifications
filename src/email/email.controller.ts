@@ -86,4 +86,17 @@ export class EmailController {
   async log(@Param('id') id: string) {
     return this.emailLogService.log(id);
   }
+
+  @Get('logs/stats')
+  async getStats(
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
+  ) {
+    return this.emailLogService.getStats(fromDate, toDate);
+  }
+
+  @Get('logs/latest')
+  async getLatestLogs(@Query('limit') limit = 10) {
+    return this.emailLogService.getLatestLogs(limit);
+  }
 }

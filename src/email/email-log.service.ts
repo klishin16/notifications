@@ -57,4 +57,21 @@ export class EmailLogService {
   public async log(logId: string) {
     return this.emailLogRepository.findOne({ where: { id: logId } });
   }
+
+  public async getStats(fromDate?: string, toDate?: string) {
+    const statistics = await this.emailLogRepository.query(`
+      SELECT status, COUNT(*) AS count FROM email_logs GROUP BY status
+    `);
+
+    console.log(statistics, fromDate, toDate);
+
+    return statistics;
+  }
+
+  async getLatestLogs(limit: number) {
+    return this.emailLogRepository.find({
+      take: limit,
+      order: { created_at: 'DESC' },
+    });
+  }
 }
