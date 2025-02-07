@@ -88,6 +88,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": ["/node_modules/", "main.ts", "src/common/database", ".module.ts$", "units/mocks"]
+    "coveragePathIgnorePatterns": ["/node_modules/", "main.ts", "src/common/database", ".module.ts$", "units/mocks"],
+    "coverageReporters": ["text", "lcov"]
   }
 }
