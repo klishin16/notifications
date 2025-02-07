@@ -8,7 +8,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EmailLog } from './entities/email-log.entity';
 import { MAX_RETRIES } from './constants';
 import * as crypto from 'node:crypto';
-import { EEmailStatus } from './types/email-status.enum';
 
 describe('EmailController', () => {
   let controller: EmailController;
@@ -62,6 +61,19 @@ describe('EmailController', () => {
       message: 'Email добавлен в очередь',
       logId,
     });
+  });
+
+  it('should return template', async () => {
+    jest
+      .spyOn(emailService, 'compileTemplate')
+      .mockResolvedValue('Test template');
+
+    const result = await controller.previewEmail('welcome', {
+      name: 'Anonymous',
+      code: '1234',
+    });
+
+    expect(result).toStrictEqual({ html: 'Test template' });
   });
 
   it('should return email sent logs', async () => {

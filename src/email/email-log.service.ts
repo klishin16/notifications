@@ -23,7 +23,7 @@ export class EmailLogService {
   }
 
   async incrementRetryCount(id: string) {
-    await this.emailLogRepository.increment({ id }, 'retryCount', 1);
+    return this.emailLogRepository.increment({ id }, 'retryCount', 1);
   }
 
   public async logs(

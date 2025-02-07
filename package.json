@@ -87,6 +87,7 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["/node_modules/", "main.ts", "src/common/database", ".module.ts$", "units/mocks"]
   }
 }
