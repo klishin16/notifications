@@ -2,38 +2,37 @@
 
 
 ## 📌 Описание
-Этот сервис предназначен для асинхронной отправки email-сообщений с поддержкой очередей (Bull), шаблонов (Handlebars) и логирования в базу данных (PostgreSQL).
-
+Сервис для отправки email-сообщений с поддержкой очередей, логирования, шаблонов и файлов. Также включает веб-дашборд для мониторинга отправки и управления шаблонами.
 ## 🚀 Функционал
-- 📩 **Отправка email** (обычных и шаблонных)
+- 📩 **Отправка email** (обычных и шаблонных) через очереди Bull (Redis)
 - 📊 **Логирование статусов отправки** (created, pending, sent, failed)
-- 🔁 **Автоматические ретраи** при неудачной отправке
-- 📎 **Поддержка вложений** (attachments)
+- 🔁 **Автоматические ретраи** при неудачной отправке с логированием количества попыток
+- 📝 **Шаблоны email** (загрузка, редактирование, предпросмотр)
+- 📊 **Графический дашборд** для мониторинга отправки email
+- 📎 **Поддержка вложений в письмах** (attachments)
 - 📜 **Просмотр логов через API**
-- 🔄 **Пересылка неудачных писем**
 - 🌐 **Поддержка SMTP, SendGrid, Mailgun** (в планах)
 - 📊 **Мониторинг через Prometheus / Grafana** (в планах)
 
 ## 🏗️ Структура проекта
 ```
-📂 src
- ├── 📂 email
- │    ├── email.module.ts          # Модуль email-сервиса
- │    ├── email.controller.ts      # Контроллер API
- │    ├── email.service.ts         # Сервис отправки писем
- │    ├── email.processor.ts       # Обработчик очереди Bull
- │    ├── email-log.entity.ts      # Логирование email в PostgreSQL
- │    ├── email-log.service.ts     # Сервис логирования
- │
- ├── 📂 templates                  # Шаблоны писем (Handlebars)
- │    ├── welcome.hbs              # Пример шаблона email
- │
- ├── 📂 config                      # Конфигурация приложения
- │    ├── config.module.ts          # Конфигурация NestJS
- │    ├── config.service.ts         # Сервис конфигурации
- │
- ├── main.ts                        # Точка входа
- ├── app.module.ts                   # Главный модуль
+📂 notifications
+ ├── dashboard/  # React-приложение для мониторинга
+ ├── 📂 src/
+ │    ├── 📂 common                     # Модуль с общими компонентами
+ │    ├── 📂 email                      # Модуль для управлениями шаблонами
+ │    │    ├── 📂 templates             # Шаблоны писем (Handlebars)
+ │    │    │    ├── welcome.hbs         # Пример шаблона email
+ │    │    ├── email.module.ts          # Модуль email-сервиса
+ │    │    ├── email.controller.ts      # Контроллер API
+ │    │    ├── email.service.ts         # Сервис отправки писем
+ │    │    ├── email.processor.ts       # Обработчик очереди Bull
+ │    │    ├── email-log.entity.ts      # Логирование email в PostgreSQL
+ │    │    ├── email-log.service.ts     # Сервис логирования
+ │    ├── 📂 statistics                 # Модуль для управлениями шаблонами
+ │    ├── 📂 templates                  # Модуль для управлениями шаблонами
+ ├── app.module.ts                      # Главный модуль
+ ├── main.ts                            # Точка входа
 ```
 
 ## ⚙️ Установка и запуск
@@ -45,14 +44,18 @@ yarn install
 ### 2️⃣ Настройка `.env` (пример)
 ```ini
 PORT=3000
+
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=notifications
+
 REDIS_HOST=localhost
 REDIS_PORT=6379
+
 EMAIL_MAX_RETRIES=3
+
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
 SMTP_USER=your-email@example.com
@@ -72,10 +75,9 @@ yarn run start:dev
 yarn run start:prod
 ```
 
-### 4️⃣ Запуск Redis и Bull Dashboard
+### 4️⃣ Запуск Redis (для очередей Bull)
 ```sh
-docker-compose up -d redis
-npm run bull:dashboard
+docker run -d --name redis -p 6379:6379 redis
 ```
 
 ## 📝 Тестирование
@@ -116,23 +118,6 @@ POST /email/send
 GET /email/logs?status=failed&to=user@example.com&page=1&limit=10
 ```
 
-### 🔄 Повторная отправка
-```http
-POST /email/retry/:id
-```
+### 📊 Дашборд (React)
 
-## 🛑 Остановка
-```sh
-docker-compose down
-npm stop
-```
-
-## 📌 Дополнительные улучшения (в будущем)
-- 🌐 Поддержка SendGrid / Mailgun
-- 📊 Метрики в Prometheus / Grafana
-- 🛡 Безопасность (Rate limiting, JWT)
-
-// TODO предпросмотр в браузере
-// TODO пагинация
-
-
+Доступен по адресу http://localhost:5173 после запуска.

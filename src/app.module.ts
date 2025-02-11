@@ -7,6 +7,8 @@ import { CommonModule } from './common/common.module';
 import * as Joi from 'joi';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'node:path';
+import { TemplatesModule } from './templates/templates.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -36,10 +38,12 @@ import { join } from 'node:path';
       inject: [ConfigService],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'dashboard', 'dist'),
+      rootPath: join(__dirname, '..', '..', 'dashboard', 'build'),
     }),
     EmailModule,
     CommonModule,
+    TemplatesModule,
+    StatisticsModule,
   ],
   controllers: [],
   providers: [],

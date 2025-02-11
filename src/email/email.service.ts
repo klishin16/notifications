@@ -24,10 +24,10 @@ export class EmailService {
     private readonly configService: ConfigService,
   ) {}
 
-  async enqueueEmail(sendEmailDto: SendEmailDto) {
-    const log = await this.emailLogService.createLog(sendEmailDto);
+  async enqueueEmail(email: IEmail) {
+    const log = await this.emailLogService.createLog(email);
     await this.emailQueue.add(
-      { ...sendEmailDto, logId: log.id },
+      { ...email, logId: log.id },
       { attempts: this.maxRetries + 1, backoff: 5000 },
     );
 
@@ -51,6 +51,7 @@ export class EmailService {
       subject: email.subject,
       text: email.text,
       html,
+      attachments: email.attachments,
     });
   }
 

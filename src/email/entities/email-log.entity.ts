@@ -19,6 +19,9 @@ export class EmailLog extends BaseEntity {
   @Column('jsonb', { nullable: true })
   templateData?: Record<string, any>;
 
+  @Column('jsonb', { nullable: true })
+  attachments?: { filename: string; path: string }[];
+
   @Column({ type: 'enum', enum: EEmailStatus, default: EEmailStatus.CREATED })
   status: string;
 

@@ -21,7 +21,12 @@ describe('EmailController', () => {
         EmailService,
         EmailLogService,
         { provide: ConfigService, useValue: mockedConfigService },
-        { provide: getRepositoryToken(EmailLog), useValue: {} },
+        {
+          provide: getRepositoryToken(EmailLog),
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
       ],
     })
       .useMocker((token) => {
@@ -96,5 +101,41 @@ describe('EmailController', () => {
       .mockImplementationOnce(() => Promise.resolve(emailLog));
 
     expect(await controller.log(logId)).toStrictEqual(emailLog);
+  });
+
+  it('should return template by log id', async () => {
+    jest
+      .spyOn(emailService, 'compileTemplate')
+      .mockResolvedValue('Test template');
+
+    jest.spyOn(emailLogService, 'log').mockResolvedValue({
+      id: crypto.randomUUID(),
+      template: 'welcome',
+      templateData: {},
+    } as EmailLog);
+
+    const result = await controller.previewEmailFromLog('test');
+
+    expect(result).toStrictEqual({ html: 'Test template' });
+  });
+
+  it('should throw NotFoundException', async () => {
+    jest.spyOn(emailLogService, 'log').mockResolvedValue(null);
+
+    await expect(controller.previewEmailFromLog('test')).rejects.toThrow();
+  });
+
+  it('should throw UnprocessableEntityException', async () => {
+    jest.spyOn(emailLogService, 'log').mockResolvedValue({
+      id: crypto.randomUUID(),
+    } as EmailLog);
+
+    await expect(controller.previewEmailFromLog('test')).rejects.toThrow();
+  });
+
+  it('should return latest logs', async () => {
+    jest.spyOn(emailLogService, 'getLatestLogs').mockResolvedValue([]);
+
+    expect(await controller.getLatestLogs()).toStrictEqual([]);
   });
 });

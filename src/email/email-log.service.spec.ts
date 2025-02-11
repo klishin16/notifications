@@ -23,6 +23,7 @@ describe('EmailLogService', () => {
         {
           provide: getRepositoryToken(EmailLog),
           useValue: {
+            find: jest.fn(),
             findOne: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
@@ -143,5 +144,13 @@ describe('EmailLogService', () => {
     );
 
     expect(result).toStrictEqual(logIds);
+  });
+
+  it('should return latest logs', async () => {
+    jest.spyOn(repository, 'find').mockResolvedValue([]);
+
+    const result = await service.getLatestLogs(10);
+
+    expect(result).toStrictEqual([]);
   });
 });
