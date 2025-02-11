@@ -120,4 +120,4 @@ GET /email/logs?status=failed&to=user@example.com&page=1&limit=10
 
 ### 📊 Дашборд (React)
 
-Доступен по адресу http://localhost:5173 после запуска.
+Доступен по адресу http://localhost:3000.
