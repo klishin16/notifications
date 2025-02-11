@@ -1,4 +1,4 @@
-# Draft: Notifications Service (NestJS + Bull + PostgreSQL)
+# Notifications Service (NestJS + Bull + PostgreSQL)
 
 
 ## 📌 Описание
